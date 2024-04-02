@@ -1,7 +1,8 @@
 name: "Reusable Tag Release Workflow"
 on:
   push:
-    - release/**
+    branches:
+      - release/**
 
 jobs:
   TagRelease:
