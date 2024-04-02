@@ -10,3 +10,5 @@ Console.WriteLine("Hello, World! Adding feature branch");
 Console.WriteLine("Hello, World! Adding topic branch again");
 
 Console.WriteLine("Hello, World! Another topic branch");
+
+Console.WriteLine("Hello, World! Adding feature branch");
