@@ -1,9 +1,8 @@
 name: "Reusable Tag Release Workflow"
 on:
-  workflow_call:
-    secrets:
-      TOKEN:
-        required: true
+  push:
+    - release/**
+
 jobs:
   TagRelease:
     name: "Tag Release"
