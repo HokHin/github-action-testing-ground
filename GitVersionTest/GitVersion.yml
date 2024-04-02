@@ -14,10 +14,10 @@ build-metadata-padding: 4
 commits-since-version-source-padding: 4
 commit-message-incrementing: Enabled
 branches:
-  master:
+  main:
     regex: ^main
     mode: ContinuousDeployment
-    tag: "next"
+    tag: ""
     increment: Minor
     prevent-increment-of-merged-branch-version: true
     track-merge-target: true
@@ -27,7 +27,7 @@ branches:
     regex: ^release(s)?[/-]
     mode: ContinuousDeployment
     tag: ""
-    increment: Minor
+    increment: Patch
     prevent-increment-of-merged-branch-version: false
     track-merge-target: false
     tracks-release-branches: false
@@ -42,11 +42,12 @@ branches:
     track-merge-target: false
     tracks-release-branches: false
     is-release-branch: false
+    source-branches: ["main", "feature"]
   pull-request:
     regex: ^(pull|pull\-requests|pr)[/-]
     mode: ContinuousDelivery
     tag: PullRequest
-    increment: Minor
+    increment: Inherit
     prevent-increment-of-merged-branch-version: false
     tag-number-pattern: '[/-](?<number>\d+)[-/]'
     track-merge-target: false
@@ -56,7 +57,7 @@ branches:
     regex: ^hotfix(es)?[/-]
     mode: ContinuousDelivery
     tag: useBranchName
-    increment: Minor
+    increment: Patch
     prevent-increment-of-merged-branch-version: false
     track-merge-target: false
     tracks-release-branches: false
@@ -70,4 +71,4 @@ branches:
     track-merge-target: false
     tracks-release-branches: false
     is-release-branch: false
-    source-branches: ["master", "feature"]
+    source-branches: ["main", "feature"]
