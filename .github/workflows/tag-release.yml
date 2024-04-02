@@ -1,23 +1,37 @@
+name: "Reusable Tag Release Workflow"
 on:
   push:
     branches:
       - release/**
 
-name: Create Release
-
 jobs:
-  build:
-    name: Create Release
+  TagRelease:
+    name: "Tag Release"
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Tag Branch
-        uses: actions/create-release@v1.1.4
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.10.2
+        with:
+          versionSpec: "5.x"
+
+      - name: Determine GitVersion
+        uses: gittools/actions/gitversion/execute@v0.10.2
+        with:
+          useConfigFile: true
+
+      - name: Create release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ env.GitVersion_SemVer }}
-          release_name: v${{ env.GitVersion_SemVer }}
-          draft: false
-          prerelease: false
+          tag: v${{ env.GitVersion_SemVer }}
+        run: |
+          gh release create "$tag" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="v${{ env.GitVersion_SemVer }}" \
+              --generate-notes
