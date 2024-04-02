@@ -1,0 +1,38 @@
+# This workflow uses a reusable library github action will perform all relevant quality and security checks, build your artifacts and release
+# If successful the built images and charts will be pushed to the artifactory and the release will be deployed via Harness into AKS
+# Any changes to the library action should be requested from Devops in the first instance
+name: "Release Workflow V2"
+on:
+  push:
+    branches:
+      - feature/** ## for testing - remove this later
+      - release/** 
+jobs:  
+  docker_build_scan_publish_workflow:
+    strategy:
+          matrix:
+            include:
+              - DockerFilePath: src/docusaurus/Dockerfile
+                DockerTag: archinsurance.jfrog.io/aeis-ea-docker-release-local/archinternational/ea/aeis-ee-x3-docs  
+    uses: archinsurance/aeis-ea-reusable-github-action-workflows/.github/workflows/reusable-docker-build-publish.yml@v2.18.0
+    with:
+      matrix-docker-filepath: ${{ matrix.DockerFilePath }}
+      matrix-docker-tag: ${{ matrix.DockerTag }}
+    secrets:
+      SERVICE_ACCOUNT: svc.aeispoiteaci@archinsurance.co.uk
+      JFROG_API_TOKEN: ${{ secrets.AEIS_EA_ARTIFACTORY_ACCESS_TOKEN }}
+
+  helm_lint_package_publish_workflow:
+    uses: archinsurance/aeis-ea-reusable-github-action-workflows/.github/workflows/reusable-helm-package-publish.yml@v2.18.0
+    needs: docker_build_scan_publish_workflow
+    with:
+      helm-chart-directory: eng
+      jfrog-helm-repository: aeis-ea-helm-release-local/archinternational-ea-x3-docs/
+    secrets:
+      JFROG_SERVER_TOKEN: ${{ secrets.AEIS_EA_JFROG_SERVER_TOKEN }}
+
+  tag_release:
+    uses: archinsurance/aeis-ea-reusable-github-action-workflows/.github/workflows/reusable-tag-release.yml@v2.18.0
+    needs: helm_lint_package_publish_workflow
+    secrets:
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}
