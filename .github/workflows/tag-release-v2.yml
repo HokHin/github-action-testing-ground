@@ -5,7 +5,6 @@ name: "Release Workflow V2"
 on:
   push:
     branches:
-      - feature/** ## for testing - remove this later
       - release/** 
 jobs:  
   docker_build_scan_publish_workflow:
