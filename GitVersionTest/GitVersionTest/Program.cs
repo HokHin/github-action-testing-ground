@@ -34,3 +34,5 @@ Console.WriteLine("Hello, World! Adding feature major branch");
 Console.WriteLine("Hello, World! Adding feature minor branch");
 
 Console.WriteLine("Hello, World! Adding feature minor branch again");
+
+Console.WriteLine("Hello, World! Adding topic patch again");
